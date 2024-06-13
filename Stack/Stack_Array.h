@@ -18,6 +18,8 @@ void display(StackArrayList s);
 
 void visualize(StackArrayList s);
 
+StackArrayList getEven(StackArrayList *S);
+
 //Others
 //Create a function that would get all even numbers 
 //and return as a new stack removing from the old stack
