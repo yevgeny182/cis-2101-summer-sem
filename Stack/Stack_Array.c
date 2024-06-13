@@ -39,7 +39,7 @@ void display(StackArrayList s){
 }
 
 void visualize(StackArrayList s){
-	  printf("\n\VALUE"); printf("%-10s" "INDEX", " ", "\n");
+	  printf("\nVALUE"); printf("%-10s" "INDEX", " ", "\n");
 	int a;
 	for(a=s.top; a>=0; a--){
 		printf("\n[%d]", s.data[a]);
