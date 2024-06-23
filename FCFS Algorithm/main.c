@@ -6,7 +6,7 @@
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
 int main(int argc, char** argv) {
-	ProcessNode* mainNode = NULL;
+	ProcessNode* main = NULL;
 	int numProc, a, pid, bt, at;
 	printf("Enter Total Number of Processes: ");
 	scanf("%d", &numProc);
@@ -16,18 +16,23 @@ int main(int argc, char** argv) {
 		printf("\nEnter details of process %d:\n", a+1);
 		printf("PID: ");
 		scanf("%d", &pid);
-		printf("Burst Time: ");
-		scanf("%d", &bt);
 		printf("Arrival Time: ");
 		scanf("%d", &at);
+		printf("Burst Time: ");
+		scanf("%d", &bt);
 		
-		mainNode = insert(mainNode, pid, bt, at);
+		main = insert(main, pid, bt, at);
 	}
 	int wt[numProc], tat[numProc];
-	calculateWaitingTime(mainNode, wt);
-	calculateTurnaroundTime(mainNode, tat);
+	calculateWaitingTime(main, wt);
+	calculateTurnaroundTime(main, tat, wt);
 	
-	printAvgTimes(mainNode,numProc);
+	printAvgTimes(main,numProc);
+	
+	ProcessNode* temp;
+	for(temp = main; main != NULL; main = main->next){}
+	free(temp);
+
 	
 
 	return 0;

@@ -11,11 +11,13 @@ typedef struct ProcessNode {
 } ProcessNode;
 
 
-ProcessNode* insert(ProcessNode* head, int pid, int burst_time, int arriv_time);
+ProcessNode* insertFirst(ProcessNode* head, int pid, int burstTime, int arrivTime);
+
+ProcessNode* insert(ProcessNode* head, int pid, int burstTime, int arrivTime);
 
 void calculateWaitingTime(ProcessNode* head, int *wt);
 
-void calculateTurnaroundTime(ProcessNode* head, int *tat);
+void calculateTurnaroundTime(ProcessNode* head, int *tat, int *wt);
 
 void printAvgTimes(ProcessNode* head, int n);
 

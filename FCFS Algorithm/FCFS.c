@@ -2,91 +2,94 @@
 #include<stdlib.h>
 #include<stdio.h>
 
-ProcessNode* insert(ProcessNode* head, int pid, int burst_time, int arriv_time){
-	ProcessNode*  newProc = (ProcessNode*)malloc(sizeof(ProcessNode));
-	
+ProcessNode* insert(ProcessNode* head, int pid, int burstTime, int arrivTime){
+	ProcessNode* trav;
+	ProcessNode*  newProc = (ProcessNode*)malloc(sizeof(ProcessNode));	
 	newProc->pid = pid;
-	newProc->BT = burst_time;
+	newProc->BT = burstTime;
 	newProc->TAT = 0;
 	newProc->WT = 0;
-	newProc->AT = arriv_time;
-	newProc->next = head;
-	head = newProc;
+	newProc->AT = arrivTime;
+	newProc->next = NULL;
+	
+	if(head == NULL)
+		return newProc;
+	for(trav = head; trav->next!=NULL; trav = trav->next){}
+	trav->next = newProc;
 	return head;
 	
+	
 }
-
+/*
+ProcessNode* insert(ProcessNode* head, int pid, int burstTime, int arrivTime){
+	ProcessNode* trav;
+	
+	for(trav = head; trav!=NULL; trav = trav->next){
+		if(trav->pid == pid && trav->BT == burstTime && trav->AT == arrivTime){
+			return head;
+		}
+	}
+	insertFirst(head,  pid,  burstTime,  arrivTime);
+}
+*/
 void calculateWaitingTime(ProcessNode* head, int *wt){
 	ProcessNode* temp;
 	int remainTime = 0, currTime = 0;
-	for(temp = head; temp!=NULL; temp = temp->next){
-		currTime = temp->AT > currTime ? temp->AT : currTime + remainTime;
-        remainTime = currTime - temp->AT; 
-        
-        if (remainTime >= temp->BT) {
-            remainTime -= temp->BT;
-            wt[temp->pid - 1] = remainTime;
-        } else {
-            wt[temp->pid - 1] = remainTime;
-            remainTime = 0;
-        }	
-	}
-}
-void calculateTurnaroundTime(ProcessNode* head, int *tat) {
-    ProcessNode* temp;
-    int remainTime = 0, currTime = 0;
-    for (temp = head; temp!= NULL; temp = temp->next) {
-       
-        currTime = temp->AT > currTime? temp->AT : currTime + remainTime;
-        remainTime = currTime - temp->AT; 
-
-        if (currTime >= temp->AT) {
-            tat[temp->pid - 1] = currTime + remainTime - temp->AT; 
+ 	for (temp = head; temp != NULL; temp = temp->next) {
+        if (currTime < temp->AT) {
+            currTime = temp->AT;  // If CPU is idle until process arrives
         }
+        wt[temp->pid - 1] = currTime - temp->AT;
+        currTime += temp->BT;
+    }
+}
+void calculateTurnaroundTime(ProcessNode* head, int *tat, int *wt) {
+    ProcessNode* temp;
+     for (temp = head; temp != NULL; temp = temp->next) {
+        tat[temp->pid - 1] = temp->BT + wt[temp->pid - 1];
     }
 }
 
 
 void printAvgTimes(ProcessNode* head, int n) {
-    int wt[n], tat[n], total_wt = 0, total_tat = 0;
+    int wt[n], tat[n], totalWait = 0, totalTAT = 0;
+    int i;
     calculateWaitingTime(head, wt);
-    calculateTurnaroundTime(head, tat);
+    calculateTurnaroundTime(head, tat, wt);
 
-    // Calculate total waiting time and total turnaround time
-    for(int i = 0; i < n; i++) {
-        total_wt += wt[i]; // Correctly accumulate total waiting time
-        total_tat += tat[i]; // Correctly accumulate total turnaround time
+    for( i = 0; i < n; i++) {
+        totalWait += wt[i];
+        totalTAT += tat[i]; 
     }
 
-    // Display processes along with all details
-    printf("Processes\tBurst time\tArrival time\tWaiting time\tTurn around time\n");
+    // Display processes along with all details-
+    printf("Processes ID\tBT\tAT\tWT\tTAT\n");
     ProcessNode* temp = head;
     int currentTime = 0;
-    for(int i = 0; temp!= NULL; i++, temp = temp->next) {
-        printf("%d\t\t%d\t\t%d\t\t%d\t\t%d\n", i+1, temp->BT, temp->AT, wt[i], tat[i]); // Correctly display waiting time and turnaround time
-        currentTime += temp->BT;
-    }
+    for( i = 0; temp!= NULL; i++, temp = temp->next) {
+        printf("%d\t\t%d\t%d\t%d\t%d\n", temp->pid, temp->BT, temp->AT, wt[temp->pid - 1], tat[temp->pid - 1]);
 
-    // Calculate and display average waiting time and average turnaround time
-    float avg_wt = (float)total_wt / n;
-    float avg_tat = (float)total_tat / n;
-    printf("Average waiting time = %.2f\n", avg_wt);
-    printf("Average turn around time = %.2f\n", avg_tat);
+    }
+    printf("\n"); printf("\n");
+    printf("Total Waiting Time: %d\n", totalWait);
+    printf("Total Turn Around Time: %d\n", totalTAT);
+
+	printf("\n"); printf("\n");
+    float avgWaitTime = (float)totalWait / n;
+    float avgTurnAroundTime = (float)totalTAT / n;
+   
+    printf("Average Waiting Time = %.2f\n", avgWaitTime);
+    printf("Average Turn Around Time = %.2f\n", avgTurnAroundTime);
 
     // Gantt Chart Visualization
     printf("\nGantt Chart:\n");
-    printf("  ");
-    for(int j = 0; j < currentTime; j++) {
-        printf("|");
-    }
-    printf("\n");
-    
-    for(temp = head; temp!= NULL; temp = temp->next) {
-        printf("%d ", temp->pid);
-        for(int j = 0; j < temp->BT; j++) {
-            printf("|");
+    int currTime = 0;
+    for(temp = head; temp != NULL; temp = temp->next) {
+        if (currTime < temp->AT) {
+            currTime = temp->AT;
         }
-        printf("\n");
+        printf("Process ID %d | Time: %d to %d\n", temp->pid, currTime, currTime + temp->BT);
+        currTime += temp->BT;
     }
 }
 
