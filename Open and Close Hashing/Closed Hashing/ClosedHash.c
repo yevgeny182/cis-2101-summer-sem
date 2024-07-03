@@ -2,8 +2,12 @@
 #include<stdlib.h>
 #include<stdio.h>
 
-int hashVal(char* LN, int size) {
-    return (LN[0] - 'A') % size;
+int hashVal(char* LN) {
+	int a, hash=0;
+	for(a=0; LN[a]!='\0'; a++){
+		hash += LN[a];
+	}
+    return hash % SIZE;
 }
 void init(Dictionary *D, int size) {
     int a;
@@ -23,7 +27,7 @@ void resize(Dictionary *D) {
     }
 
     for (a = 0; a < D->size && D->table[a] != EMPTY && D->table[a] != DELETED; a++) {
-            int hash = hashVal(D->table[a]->person.LN, newSize);
+            int hash = hashVal(D->table[a]->person.LN);
             int originalHash = hash;
             while (newTable[hash] != EMPTY) {
                 hash = (hash + 1) % newSize;
@@ -44,7 +48,7 @@ void insert(Dictionary *D, nameType person){
 	if((float)D->count / D->size > THRESHOLD){
 		resize(D);
 	}
-	int hash = hashVal(person.LN, D->size);
+	int hash = hashVal(person.LN);
 	int origHash = hash;
 	for(; D->table[hash]!=EMPTY && D->table[hash]!=DELETED; ){
 		hash = (hash + 1) % D->size;
@@ -75,12 +79,14 @@ void display(Dictionary *D){
     }
 }
 void deleteRec(Dictionary *D, nameType person){
-	 int hash = hashVal(person.LN, D->size);
+	 int hash = hashVal(person.LN);
     int originalHash = hash;
-    for (; D->table[hash] != EMPTY && D->table[hash] != DELETED && strcmp(D->table[hash]->person.LN, person.LN) == 0;) {
-            free(D->table[hash]);
+    while ( D->table[hash] != EMPTY) {
+    	if(D->table[hash] != DELETED && strcmp(D->table[hash]->person.LN, person.LN) == 0){
+    		 free(D->table[hash]);
             D->table[hash] = DELETED;
-            D->count--;
-        hash = (hash + 1) % D->size;
+		}
+        hash = (hash + 1) % D->size;   
     }
+    printf("Record [%s] is now deleted\n", person.LN);
 }

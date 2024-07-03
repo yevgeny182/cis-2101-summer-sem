@@ -1,5 +1,5 @@
 [Project]
-FileName=OpenAndCloseHash.dev
+FileName=OpenHash.dev
 Name=OpenAndCloseHash
 Type=1
 Ver=2
@@ -51,7 +51,7 @@ AutoIncBuildNr=0
 SyncProduct=1
 
 [Unit2]
-FileName=OpenandClose.h
+FileName=OpenHash.h
 CompileCpp=0
 Folder=
 Compile=1
@@ -61,7 +61,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=OpenandClose.c
+FileName=OpenHash.c
 CompileCpp=0
 Folder=
 Compile=1

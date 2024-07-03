@@ -21,7 +21,7 @@ typedef struct {
     int count;
 } Dictionary;
 
-int hashVal(char* LN, int size);
+int hashVal(char* LN);
 void init(Dictionary *D, int size);
 void resize(Dictionary *D);
 void insert(Dictionary *D, nameType person);

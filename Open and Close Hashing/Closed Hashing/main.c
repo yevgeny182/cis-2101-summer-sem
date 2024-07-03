@@ -24,5 +24,19 @@ int main(int argc, char *argv[]) {
 		insert(&mainDict, name[a]);
 	}
 	display(&mainDict);
+	
+	int index;
+	printf("\n\nDelete a record according to index: ");
+	
+	scanf("%d", &index);
+	printf("Deleting a record\n\n");
+	if(index < dataCount){
+		deleteRec(&mainDict, name[index]);
+	}else{
+		printf("Cannot delete a record!\n");
+	}
+	
+	display(&mainDict);
+	
 	return 0;
 }
