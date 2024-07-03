@@ -18,7 +18,6 @@ typedef struct node {
 typedef struct {
     nPtr *table;
     int size;
-    int count;
 } Dictionary;
 
 int hashVal(char* LN);

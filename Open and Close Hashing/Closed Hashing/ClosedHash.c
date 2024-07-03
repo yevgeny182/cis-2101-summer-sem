@@ -16,7 +16,6 @@ void init(Dictionary *D, int size) {
         D->table[a] = EMPTY;
     }
     D->size = size;
-    D->count = 0;
 }
 void resize(Dictionary *D) {
     int newSize = D->size * 2;
@@ -45,9 +44,6 @@ void resize(Dictionary *D) {
 }
 
 void insert(Dictionary *D, nameType person){
-	if((float)D->count / D->size > THRESHOLD){
-		resize(D);
-	}
 	int hash = hashVal(person.LN);
 	int origHash = hash;
 	for(; D->table[hash]!=EMPTY && D->table[hash]!=DELETED; ){
@@ -59,7 +55,6 @@ void insert(Dictionary *D, nameType person){
 	D->table[hash] = (nPtr)malloc(sizeof(nodeType));
 	if(D->table[hash] != NULL){
 		D->table[hash]->person = person;
-		D->count++;
 	}
 
 }
@@ -81,9 +76,9 @@ void display(Dictionary *D){
 void deleteRec(Dictionary *D, nameType person){
 	 int hash = hashVal(person.LN);
     int originalHash = hash;
-    while ( D->table[hash] != EMPTY) {
+    while (D->table[hash] != EMPTY) {
     	if(D->table[hash] != DELETED && strcmp(D->table[hash]->person.LN, person.LN) == 0){
-    		 free(D->table[hash]);
+    		free(D->table[hash]);
             D->table[hash] = DELETED;
 		}
         hash = (hash + 1) % D->size;   
