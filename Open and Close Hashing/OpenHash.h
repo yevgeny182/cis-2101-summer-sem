@@ -1,6 +1,6 @@
 #ifndef OpenHash
 #define OpenHash
-#define SIZE 10
+#define SIZE 26
 
 typedef struct{
 	char LN[16], FN[24];

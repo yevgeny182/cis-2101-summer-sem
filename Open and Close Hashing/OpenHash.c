@@ -13,7 +13,7 @@ void init(Dictionary D){
 void insert(Dictionary D, nameType person){
 	nPtr* trav, temp;
 	int hash = hashVal(person.LN);
-	if (hash < 0 || hash >= SIZE) {
+	if (hash < 0 || hash > SIZE) {
 		Dictionary newDict;
         printf("Error: Hash value (%d) is out of bounds for the hash table size.\n", hash);
         return; 
@@ -23,7 +23,6 @@ void insert(Dictionary D, nameType person){
 		D[hash]->person = person;
 		D[hash]->next = NULL;
 	}else{
-
 		for(trav = &D[hash]; *trav!=NULL && strcmp((*trav)->person.LN, person.LN) < 0; trav = &(*trav)->next){}
 		temp = (nPtr)malloc(sizeof(nodeType));
 			if(temp!=NULL){
@@ -66,15 +65,15 @@ Dictionary resizeDictionary(Dictionary oldDict) {
   */
 
 int hashVal(char* LN) {
-	/*
+	
     int hash = 0;
     int a;
     for ( a = 0; LN[a]!= '\0'; a++) {
         hash += LN[a];
     }
     return hash % SIZE; 
-    */
-    return LN[0] - 'A';
+
+    //return LN[0] - 'A';
 }
 
 void display(Dictionary D){
@@ -89,10 +88,6 @@ void display(Dictionary D){
 		}
 			if(temp == NULL){
 				printf(" ->NULL");
-			}else{
-				int hash = hashVal(temp->person.LN);
-			
-				
 			}
 			printf("\n");
 	}
@@ -100,6 +95,15 @@ void display(Dictionary D){
 }
 void deleteRec(Dictionary D, nameType person){
 	nPtr temp, *trav;
+	int hash = hashVal(person.LN);
+	for (trav = &D[hash]; *trav != NULL && strcmp((*trav)->person.LN, person.LN) != 0; trav = &(*trav)->next) {}
+        temp = *trav;
+        *trav = (*trav)->next;
+        free(temp);
+        
+    if(hash < 0 || hash >= SIZE){
+		printf("Record not available!\n");
+	}
 }
 
 
